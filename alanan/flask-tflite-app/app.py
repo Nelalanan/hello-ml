@@ -15,12 +15,12 @@ app.config['UPLOAD_FOLDER'] = 'uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # Load label mappings
-with open("models/labels.json", "r") as f:
+with open("alanan/flask-tflite-app/models/model.tflite", "r") as f:
     labels = json.load(f)
     label_dict = {item["label"]: item["name"] for item in labels}
 
 # Load TFLite model
-interpreter = tflite.Interpreter(model_path="models/model.tflite")
+interpreter = tflite.Interpreter(model_path="alanan/flask-tflite-app/models/model.tflite")
 interpreter.allocate_tensors()
 
 # Get input/output details
@@ -78,4 +78,6 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000)) 
+    app.run(host='0.0.0.0', port=port)
+
